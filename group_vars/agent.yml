@@ -1,0 +1,4 @@
+---
+zabbix_version: "2.2.21"
+rotate: 365
+Servers: "zbx.z-hosts.com,zbx-proxy-ngtk01.z-hosts.com,zbx-proxy-ngtk02.z-hosts.com,zbx-proxy-tmc01.z-hosts.com,zbx-proxy-tmc02.z-hosts.com,zbx-proxy-fujitsu01.z-hosts.com,zbx-proxy-hitachi01.z-hosts.com,zbx-proxy-jkt01.z-hosts.com,10.30.0.4"

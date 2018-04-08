@@ -1,0 +1,50 @@
+# zabbix/agent	
+# Install 	
+
+- name: copy zabbix
+  copy:
+    src: /root/zabbix-{{ zabbix_version }}-1.el7.x86_64.rpm
+    dest: /usr/local/src/zabbix-{{ zabbix_version }}-1.el7.x86_64.rpm
+
+- name: copy zabbix-agent
+  copy:
+    src: /root/zabbix-agent-{{ zabbix_version }}-1.el7.x86_64.rpm
+    dest: /usr/local/src/zabbix-agent-{{ zabbix_version }}-1.el7.x86_64.rpm
+
+- name: Check zabbix_agentd
+  stat: path="/usr/sbin/zabbix_agentd"	
+  register: is_zabbix_agentd
+
+#- block:
+
+- name: Install zabbix
+  yum:
+   name: /usr/local/src/zabbix-{{ zabbix_version }}-1.el7.x86_64.rpm 	
+   state: present
+
+- name: Install zabbix-agent
+  yum:
+   name: /usr/local/src/zabbix-agent-{{ zabbix_version }}-1.el7.x86_64.rpm 	
+   state: present
+
+  when: not is_zabbix_agentd.stat.exists	
+
+
+# Copy Configure	 
+- name: Copy zabbix-agent Config
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/zabbix/{{ item }}"
+    
+
+  with_items:   
+
+    - "zabbix_agentd.conf" 	
+
+  notify: Restart zabbix-agent
+
+- name: Zabbix-agent is enable
+  systemd:
+    name: zabbix-agent
+    state: started
+    enabled: yes
