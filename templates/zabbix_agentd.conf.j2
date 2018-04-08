@@ -1,0 +1,43 @@
+# This is a config file for the Zabbix agent daemon (Unix)
+# To get more information about Zabbix, visit http://www.zabbix.com
+
+############ GENERAL PARAMETERS #################
+PidFile=/var/run/zabbix/zabbix_agentd.pid
+LogFile=/var/log/zabbix/zabbix_agentd.log
+LogFileSize=10
+# DebugLevel=3
+# SourceIP=
+# EnableRemoteCommands=0
+# LogRemoteCommands=0
+
+###### Passive checks related
+Server={{ zabbix_agent_Servers }}
+ListenPort=10050
+ListenIP=0.0.0.0
+StartAgents=3
+
+###### Active checks related
+ServerActive={{ zabbix_agent_ServerActive }}
+# HostnameItem=system.hostname
+# HostMetadata=
+# HostMetadataItem=
+# RefreshActiveChecks=60
+# BufferSend=5
+# BufferSize=100
+# MaxLinesPerSecond=100
+
+############# ADVANCED PARAMETERS #################
+Timeout=30
+AllowRoot=0
+Include=/etc/zabbix/zabbix_agentd.d/
+
+######## USER-DEFINED MONITORED PARAMETERS #######
+# UnsafeUserParameters=0
+
+######### LOADABLE MODULES #######
+# LoadModulePath=${libdir}/modules
+# LoadModule=
+UserParameter=postfix.queuen,mailq | grep "^[0-9A-F]" | wc -l
+UserParameter=redis.status[*],redis-cli info | grep -w "$1" | awk -F':' '{print $$2}'
+UserParameter=redis.ping,redis-cli ping 2>/dev/null | grep -w 'PONG' | wc -l
+
